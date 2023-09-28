@@ -7,6 +7,9 @@ COPY . /app/codecollection
 
 RUN pip install -r /app/codecollection/requirements.txt
 
+RUN /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/turbot/steampipe/main/install.sh)"
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
 # Install packages
 RUN apt-get update && \
     apt install -y git && \
@@ -20,3 +23,6 @@ RUN chown 1000:0 -R /app/codecollection
 
 # Set the user to $USER
 USER python
+
+RUN steampipe plugin install azure
+RUN steampipe plugin install azuread

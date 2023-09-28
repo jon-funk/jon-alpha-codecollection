@@ -1,5 +1,5 @@
 {
-    "name": "devtools",
+    "name": "alpha",
     "shutdownAction": "none",
     "build": { "dockerfile": "Dockerfile" },
     "updateRemoteUserUID": false,
@@ -9,7 +9,7 @@
         "-p",
         "3000:3000",
         "--name",
-        "mycodecollection"
+        "jon-cc"
     ],
     "forwardPorts": [
         3000
