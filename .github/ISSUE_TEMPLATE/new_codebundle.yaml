@@ -1,9 +1,8 @@
 ---
 name: Codebundle
-about: A new codebundle request
+description: A new codebundle request
 title: "[Codebundle]"
 labels: ["Codebundle"]
-assignees: ''
 body:
   - type: markdown
     attributes:
