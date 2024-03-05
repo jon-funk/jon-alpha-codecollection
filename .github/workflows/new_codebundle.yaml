@@ -1,0 +1,25 @@
+name: Start New Codebundle
+
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  codebundle-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch issue content
+        id: fetch-issue
+        run: |
+          echo "::set-output name=body::$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
+          -H \"Accept: application/vnd.github.v3+json\" \
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r '.body')"
+
+      - name: Echo issue content
+        run: echo "${{ steps.fetch-issue.outputs.body }}"
+
+      - name: Run Python script
+        run: python main.py
