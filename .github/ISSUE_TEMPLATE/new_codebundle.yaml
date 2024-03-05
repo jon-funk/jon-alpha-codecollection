@@ -58,8 +58,11 @@ body:
       description: Who requested this codebundle?
       placeholder: Unspecified
       value: Unspecified
-  - type: raw
+  - type: textarea
+    id: dod
     attributes:
+      label: Definition of Done
+      description: What needs to be done for this codebundle to be considered complete?
       value: |
         **Definition of Done**
         - [ ] Codebundle Implementation accomplishes scope (or provide a justification for why it may differ)
