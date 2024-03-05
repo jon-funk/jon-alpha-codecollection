@@ -1,0 +1,66 @@
+---
+name: Codebundle
+about: A new codebundle request
+title: "[Codebundle]"
+labels: ["Codebundle"]
+assignees: ''
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a request form for a new codebundle to be added to this CodeCollection.
+        A feature branch will be created on this CodeCollection as a result of this form submission.
+  - type: textarea
+    id: incidentDescription
+    attributes:
+      label: Incident Description
+      description: Describe the incident that this codebundle should triage, such as redis being down, or a ec2 instance failing to start.
+      placeholder: Redis is down
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: What platform is this codebundle designed to run on?
+      options:
+        - Kubernetes
+        - AWS
+        - Azure
+        - GCP
+        - Linux
+  - type: dropdown
+    id: includeAuth
+    attributes:
+      label: Include Authentication
+      description: Should the codebundle code handle authentication automatically for you?
+      options:
+        - "True"
+        - "False"
+  - type: dropdown
+    id: diagnosticOnly
+    attributes:
+      label: Only allow diagnostic actions
+      description: Should the codebundle code be allowed to perform changes for you, or just collect triage information?
+      options:
+        - "True"
+        - "False"
+  - type: textarea
+    id: devNotes
+    attributes:
+      label: Developer Notes
+      description: Any developer notes or comments about the codebundle.
+  - type: textarea
+    id: requestedBy
+    attributes:
+      label: Requested By
+      description: Who requested this codebundle?
+      placeholder: Unspecified
+      value: Unspecified
+  - type: markdown
+    attributes:
+      value: |
+        **Definition of Done**
+        - [ ] Codebundle Implementation accomplishes scope (or provide a justification for why it may differ)
+        - [ ] Attach a screenshot of the codebundle pushing a metric locally (if an SLI) or showing a report (if a taskset).
+        - [ ] Attach a screenshot of the SLI or Taskset running in a workspace.
