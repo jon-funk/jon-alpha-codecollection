@@ -49,6 +49,8 @@ body:
     attributes:
       label: Developer Notes
       description: Any developer notes or comments about the codebundle.
+      placeholder: None
+      value: None
   - type: textarea
     id: requestedBy
     attributes:
@@ -56,7 +58,7 @@ body:
       description: Who requested this codebundle?
       placeholder: Unspecified
       value: Unspecified
-  - type: markdown
+  - type: raw
     attributes:
       value: |
         **Definition of Done**
