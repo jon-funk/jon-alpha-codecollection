@@ -33,6 +33,7 @@ body:
     attributes:
       label: Include Authentication
       description: Should the codebundle code handle authentication automatically for you?
+      value: "True"
       options:
         - "True"
         - "False"
@@ -41,6 +42,7 @@ body:
     attributes:
       label: Only allow diagnostic actions
       description: Should the codebundle code be allowed to perform changes for you, or just collect triage information?
+      value: "True"
       options:
         - "True"
         - "False"
