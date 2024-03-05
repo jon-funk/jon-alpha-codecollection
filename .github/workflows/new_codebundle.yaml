@@ -14,6 +14,9 @@ jobs:
       - name: Fetch issue content
         id: fetch-issue
         run: |
+          curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
+            -H \"Accept: application/vnd.github.v3+json\" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}
           echo "::set-output name=body::$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
           -H \"Accept: application/vnd.github.v3+json\" \
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r '.body')"
@@ -22,4 +25,4 @@ jobs:
         run: echo "${{ steps.fetch-issue.outputs.body }}"
 
       - name: Run Python script
-        run: python main.py
+        run: python .github/scripts/main.py
