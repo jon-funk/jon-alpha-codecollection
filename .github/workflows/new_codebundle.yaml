@@ -33,11 +33,13 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Codebundle Branch
         run: |
+          echo "$PWD"
+          pwd
           cd /tmp/codebundle/
-          DIR=$(ls -d */ | head -n 1 | cut -d'/' -f1)
+          DIR="./"
           echo "Found directory: $DIR"
           mkdir -p "/codebundles/${DIR}"
-          mv "/tmp/codebundle/${DIR}/"* "/codebundles/${DIR}/"
+          mv "/tmp/codebundle/${DIR}/"* "${{ github.workspace }}/codebundles/${DIR}/"
           git add "/codebundles/${DIR}/"
 
           BRANCH="new-${DIR}"
