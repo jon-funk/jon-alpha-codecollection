@@ -34,12 +34,13 @@ jobs:
       - name: Codebundle Branch
         run: |
           echo "$PWD"
+          INIT_DIR=$(echo $PWD)
           pwd
+          mkdir -p "INIT_DIR/codebundles/${DIR}"
           cd /tmp/codebundle/
           DIR="./"
           echo "Found directory: $DIR"
-          mkdir -p "/codebundles/${DIR}"
-          mv "/tmp/codebundle/${DIR}/"* "${{ github.workspace }}/codebundles/${DIR}/"
+          mv "/tmp/codebundle/${DIR}/"* "$INIT_DIR/codebundles/${DIR}/"
           git add "/codebundles/${DIR}/"
 
           BRANCH="new-${DIR}"
