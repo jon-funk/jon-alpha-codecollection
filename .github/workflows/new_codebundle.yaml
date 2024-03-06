@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with: 
+          ref: ${{ github.ref }}
       - name: fetch issue content
         run: |
           sleep 2 # Wait for issue to be created
@@ -25,3 +27,34 @@ jobs:
           cat /tmp/issue_content
       - name: Run Python script
         run: python .github/scripts/main.py /tmp/issue_content
+      - name: Git Config
+        run: |
+          git config --global user.email "${GITHUB_ACTOR}"
+          git config --global user.name "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Codebundle Branch
+        run: |
+          cd /tmp/codebundle/
+          DIR=$(ls -d */ | head -n 1 | cut -d'/' -f1)
+          echo "Found directory: $DIR"
+          mkdir -p "/codebundles/${DIR}"
+          mv "/tmp/codebundle/${DIR}/"* "/codebundles/${DIR}/"
+          git add "/codebundles/${DIR}/"
+
+          BRANCH="new-${DIR}"
+          git checkout -b $BRANCH
+
+          # Test if any git changes are made. If not, bail out and send instruction. 
+          if [ -z "$(git diff-index HEAD)" ] 
+          then 
+              echo "No git changes detected"
+              exit 0
+          else
+              echo "Changes detected. Pushing..."
+              git commit -m "Setup new codebundle branch"
+              git push --set-upstream origin $BRANCH
+          fi
+
+          # Open up a PR
+          PR_OUTPUT=$(curl -X POST -H "Authorization: Token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" -d "{\"title\":\"automatic-index-update\",\"head\":\"$BRANCH\",\"base\":\"main\",\"body\":\"automatic-index-update\" }" https://api.github.com/repos/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}/pulls)
+          PR_LINK=$(echo $PR_OUTPUT | jq '._links.html.href' )
+          PR_LINK=$(echo $PR_LINK | tr -d '"')
