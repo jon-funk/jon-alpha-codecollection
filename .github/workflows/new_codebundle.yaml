@@ -6,10 +6,12 @@ on:
 jobs:
   codebundle-issue:
     runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.issue.outputs.body }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Fetch issue content
+      - name: issue
         id: fetch-issue
         run: |
           sleep 2 # Wait for issue to be created
@@ -18,12 +20,14 @@ jobs:
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}
           # force eventual consistency
           sleep 2
-          echo "{body}=$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
+          echo "body=$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
           -H \"Accept: application/vnd.github.v3+json\" \
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r '.body')" >> $GITHUB_OUTPUT
       - name: Echo issue content
+        env:
+          BODY: ${{ needs.codebundle-issue.outputs.body }}
         run: |
-          echo "${{ env.body }}" >> /tmp/issue_content
+          echo "$BODY" >> /tmp/issue_content
           cat /tmp/issue_content
       - name: Run Python script
         run: python .github/scripts/main.py /tmp/issue_content
