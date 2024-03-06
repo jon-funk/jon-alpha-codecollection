@@ -6,13 +6,10 @@ on:
 jobs:
   codebundle-issue:
     runs-on: ubuntu-latest
-    outputs:
-      body: ${{ steps.issue.outputs.body }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: issue
-        id: fetch-issue
+      - name: fetch issue content
         run: |
           sleep 2 # Wait for issue to be created
           curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
@@ -20,14 +17,11 @@ jobs:
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}
           # force eventual consistency
           sleep 2
+          echo "writing to tmp"
           echo "body=$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" \
           -H \"Accept: application/vnd.github.v3+json\" \
-          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r '.body')" >> $GITHUB_OUTPUT
-      - name: Echo issue content
-        env:
-          BODY: ${{ needs.codebundle-issue.outputs.body }}
-        run: |
-          echo "$BODY" >> /tmp/issue_content
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r '.body')" >> /tmp/issue_content
+          echo "checking tmp content"
           cat /tmp/issue_content
       - name: Run Python script
         run: python .github/scripts/main.py /tmp/issue_content
